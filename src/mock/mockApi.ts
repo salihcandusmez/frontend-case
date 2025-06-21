@@ -18,13 +18,11 @@ const mock = new MockAdapter(axiosInstance, { delayResponse: 500 });
 
 // GET /api/products
 mock.onGet('/products').reply(() => {
-  console.log('Mock adapter: Intercepted GET /products');
   return [200, mockProducts];
 });
 
 // GET /api/products/:id
 mock.onGet(/\/products\/.+/).reply((config) => {
-  console.log(`Mock adapter: Intercepted GET ${config.url}`);
   const id = config.url?.split('/').pop() || '0';
   const product = mockProducts.find((p) => p.id === id);
   return product ? [200, product] : [404, { message: 'Product not found' }];
@@ -32,7 +30,6 @@ mock.onGet(/\/products\/.+/).reply((config) => {
 
 // POST /api/products
 mock.onPost('/products').reply((config) => {
-  console.log('Mock adapter: Intercepted POST /products');
   const newProduct = JSON.parse(config.data) as Omit<Product, 'id'>;
   const newId = new Date().getTime().toString();
   const createdProduct: Product = { id: newId, ...newProduct };
@@ -42,7 +39,6 @@ mock.onPost('/products').reply((config) => {
 
 // PUT /api/products/:id
 mock.onPut(/\/products\/.+/).reply((config) => {
-  console.log(`Mock adapter: Intercepted PUT ${config.url}`);
   const id = config.url?.split('/').pop() || '0';
   const updatedData = JSON.parse(config.data) as Partial<Product>;
   const productIndex = mockProducts.findIndex((p) => p.id === id);
@@ -55,7 +51,6 @@ mock.onPut(/\/products\/.+/).reply((config) => {
 
 // DELETE /api/products/:id
 mock.onDelete(/\/products\/.+/).reply((config) => {
-  console.log(`Mock adapter: Intercepted DELETE ${config.url}`);
   const id = config.url?.split('/').pop() || '0';
   const productIndex = mockProducts.findIndex((p) => p.id === id);
   if (productIndex !== -1) {
@@ -69,13 +64,11 @@ mock.onDelete(/\/products\/.+/).reply((config) => {
 
 // GET /api/users
 mock.onGet('/users').reply(() => {
-  console.log('Mock adapter: Intercepted GET /users');
   return [200, mockUsers];
 });
 
 // GET /api/users/:id
 mock.onGet(/\/users\/.+/).reply((config) => {
-  console.log(`Mock adapter: Intercepted GET ${config.url}`);
   const id = config.url?.split('/').pop() || '0';
   const user = mockUsers.find((u) => u.id === id);
   return user ? [200, user] : [404, { message: 'User not found' }];
@@ -83,7 +76,6 @@ mock.onGet(/\/users\/.+/).reply((config) => {
 
 // POST /api/users
 mock.onPost('/users').reply((config) => {
-  console.log('Mock adapter: Intercepted POST /users');
   const newUser = JSON.parse(config.data) as Omit<User, 'id'>;
   const newId = new Date().getTime().toString();
   const createdUser: User = { id: newId, ...newUser };
@@ -93,7 +85,6 @@ mock.onPost('/users').reply((config) => {
 
 // PUT /api/users/:id
 mock.onPut(/\/users\/.+/).reply((config) => {
-  console.log(`Mock adapter: Intercepted PUT ${config.url}`);
   const id = config.url?.split('/').pop() || '0';
   const updatedData = JSON.parse(config.data) as Partial<User>;
   const userIndex = mockUsers.findIndex((u) => u.id === id);
@@ -106,7 +97,6 @@ mock.onPut(/\/users\/.+/).reply((config) => {
 
 // DELETE /api/users/:id
 mock.onDelete(/\/users\/.+/).reply((config) => {
-  console.log(`Mock adapter: Intercepted DELETE ${config.url}`);
   const id = config.url?.split('/').pop() || '0';
   const userIndex = mockUsers.findIndex((u) => u.id === id);
   if (userIndex !== -1) {
