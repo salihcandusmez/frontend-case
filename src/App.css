@@ -1,0 +1,96 @@
+.app-layout {
+  min-height: 100vh;
+}
+
+.app-content {
+  padding: 24px;
+  width: 100%;
+}
+
+.app-title {
+  margin: 24px 0 24px 0;
+}
+
+.custom-header {
+  background: #3a4663 !important;
+}
+
+.custom-menu {
+  background: #3a4663 !important;
+  color: #fff !important;
+}
+
+.custom-menu .ant-menu-item-selected {
+  background: #23272f !important;
+}
+
+.custom-header-flex {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.custom-menu-flex {
+  flex: 1;
+}
+.custom-lang-select {
+  width: 100px;
+  margin-left: 16px;
+}
+@media (max-width: 600px) {
+  .custom-header-flex {
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+  }
+  .custom-lang-select {
+    margin-left: 16px;
+    margin-top: 0;
+    width: 100px;
+  }
+}
+
+.ant-layout-header.custom-header {
+  padding: 0 24px !important;
+  height: 64px !important;
+  display: flex;
+  align-items: center;
+}
+[data-theme='light'] .ant-layout-header.custom-header {
+  background: #f5f6fa !important;
+  color: #23272f !important;
+  border-bottom: 1px solid #e5e6eb;
+}
+[data-theme='light'] .custom-menu {
+  background: #f5f6fa !important;
+  color: #23272f !important;
+}
+[data-theme='light'] .custom-menu .ant-menu-item-selected {
+  background: #e5e6eb !important;
+  color: #23272f !important;
+}
+[data-theme='light'] .custom-lang-select .ant-select-selector {
+  background: #f0f1f3 !important;
+  border: 1.5px solid #bfc4cc !important;
+  color: #23272f !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+[data-theme='light'] .custom-lang-select .ant-select-arrow {
+  color: #23272f !important;
+}
+[data-theme='light'] .ant-switch {
+  background: #d1d5db !important;
+  border: 1.5px solid #bfc4cc !important;
+  box-shadow: none !important;
+}
+[data-theme='light'] .ant-switch-checked {
+  background: #1677ff !important;
+}
+[data-theme='light'] .ant-switch .ant-switch-handle {
+  background: #fff !important;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+[data-theme='light'] .ant-switch:hover,
+[data-theme='light'] .custom-lang-select .ant-select-selector:hover {
+  border-color: #1677ff !important;
+}

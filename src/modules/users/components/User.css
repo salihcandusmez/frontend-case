@@ -1,0 +1,38 @@
+.users-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.user-form-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.user-detail-container {
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.user-title {
+  margin: 0;
+}
+
+@media (max-width: 600px) {
+  .user-form-container,
+  .user-detail-container {
+    max-width: 100%;
+    padding: 0 8px;
+  }
+  .users-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
+
+.users-table-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
