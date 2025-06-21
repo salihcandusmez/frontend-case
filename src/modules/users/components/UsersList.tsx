@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../core/store';
-import { getUsers } from '../store/usersSlice';
+import { fetchUsers } from '../store/usersSlice';
 import type { User } from '../../../mock/types/user';
 import { Table, Tag, Spin, Alert, Button, Empty } from 'antd';
 import { useNavigate } from 'react-router-dom';
@@ -26,7 +26,7 @@ const UsersList: React.FC = () => {
   // Load users only if not already loaded
   useEffect(() => {
     if (items.length === 0) {
-      dispatch(getUsers());
+      dispatch(fetchUsers());
     }
   }, [dispatch, items.length]);
 

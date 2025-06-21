@@ -5,7 +5,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import type { RootState, AppDispatch } from '../../../core/store';
-import { getProducts, toggleFavorite } from '../store/productsSlice';
+import { fetchProducts, toggleFavorite } from '../store/productsSlice';
 import { Card, Button, Spin, Alert, Row, Col, Input, Select, Space, Empty } from 'antd';
 import { HeartOutlined, HeartFilled } from '@ant-design/icons';
 import { useNavigate } from 'react-router-dom';
@@ -26,7 +26,7 @@ const ProductsList: React.FC = () => {
 
   useEffect(() => {
     if (items.length === 0) {
-      dispatch(getProducts());
+      dispatch(fetchProducts());
     }
   }, [dispatch, items.length]);
 
@@ -45,37 +45,20 @@ const ProductsList: React.FC = () => {
     });
   }, [items, search, category]);
 
-  if (loading) return <Spin tip="Yükleniyor..." />;
-  if (error) return <Alert type="error" message={error} />;
-
-  if (filteredItems.length === 0) {
-    return <Empty description={t('no_products')} className="ant-empty" />;
-  }
-
-  return (
-    <>
-      <Space className="product-space-mb" wrap>
-        <Search
-          placeholder={t('search_product')}
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-          allowClear
-          className="product-search"
-        />
-        <Select
-          placeholder={t('select_category')}
-          value={category || undefined}
-          onChange={setCategory}
-          allowClear
-          className="product-select"
-        >
-          {categories.map((cat) => (
-            <Option key={cat} value={cat}>
-              {cat}
-            </Option>
-          ))}
-        </Select>
-      </Space>
+  const renderContent = () => {
+    if (loading) {
+      return <Spin tip="Yükleniyor..." />;
+    }
+    if (error) {
+      return <Alert type="error" message={error} />;
+    }
+    if (items.length === 0) {
+      return <Empty description={t('no_products')} className="ant-empty" />;
+    }
+    if (filteredItems.length === 0) {
+      return <Empty description={t('no_filtered_products')} className="ant-empty" />;
+    }
+    return (
       <Row gutter={[16, 16]}>
         {filteredItems.map((product) => (
           <Col xs={24} sm={12} md={8} lg={6} key={product.id}>
@@ -107,12 +90,41 @@ const ProductsList: React.FC = () => {
                 <b>{t('price')}:</b> {product.price} TL
               </p>
               <p>
-                <b>{t('category')}:</b> {product.category}
+                <b>{t('category')}:</b> {t(`category_${product.category}`)}
               </p>
             </Card>
           </Col>
         ))}
       </Row>
+    );
+  };
+
+  return (
+    <>
+      <Space className="product-space-mb" wrap>
+        <Search
+          placeholder={t('search_product')}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          allowClear
+          className="product-search"
+        />
+        <Select
+          placeholder={t('select_category')}
+          value={category}
+          onChange={setCategory}
+          allowClear
+          className="product-select"
+        >
+          <Option value="">{t('all_categories')}</Option>
+          {categories.map((cat) => (
+            <Option key={cat} value={cat}>
+              {t(`category_${cat}`)}
+            </Option>
+          ))}
+        </Select>
+      </Space>
+      {renderContent()}
     </>
   );
 };

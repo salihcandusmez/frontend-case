@@ -36,5 +36,12 @@
   "email_format": "Invalid email format",
   "positive": "Must be greater than 0",
   "product_name": "Product Name",
-  "user_name": "Full Name"
+  "user_name": "User Name",
+  "all_categories": "All Categories",
+  "category_apparel": "Apparel",
+  "category_electronics": "Electronics",
+  "category_home_goods": "Home Goods",
+  "category_stationery": "Stationery",
+  "category_sports": "Sports",
+  "category_groceries": "Groceries"
 }

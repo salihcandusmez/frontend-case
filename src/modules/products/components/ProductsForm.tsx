@@ -78,20 +78,20 @@ const ProductsForm: React.FC = () => {
    * Dispatches add or update action depending on mode
    * @param values Product form values
    */
-  const onSubmit = (values: ProductFormValues) => {
-    const fixedValues = { ...values, price: Number(values.price) };
-    if (editing && product) {
-      dispatch(updateProduct({ ...product, ...fixedValues }));
-      message.success(t('update') + ' ' + t('products') + '!');
-    } else {
-      const newProduct: Product = {
-        ...fixedValues,
-        id: Date.now().toString(),
-      };
-      dispatch(addProduct(newProduct));
-      message.success(t('add_product') + ' ' + t('products') + '!');
+  const onSubmit = async (values: ProductFormValues) => {
+    try {
+      if (editing && product) {
+        await dispatch(updateProduct({ ...product, ...values })).unwrap();
+        message.success(t('update_success', { item: t('product') }));
+      } else {
+        await dispatch(addProduct(values)).unwrap();
+        message.success(t('add_success', { item: t('product') }));
+      }
+      navigate('/products');
+    } catch (error) {
+      console.error('Failed to save product:', error);
+      message.error(t('save_error', { item: t('product') }));
     }
-    navigate('/products');
   };
 
   // Extract unique categories for select options

@@ -1,10 +1,15 @@
 /**
  * productsSlice
- * Redux slice for managing product state: list, loading, error, favorites, add, update, remove, toggle favorite.
+ * Redux slice for managing product state using async thunks for API calls.
  */
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { fetchProducts } from '../api/productsApi';
+import {
+  getProducts as apiGetProducts,
+  createProduct as apiCreateProduct,
+  updateProduct as apiUpdateProduct,
+  deleteProduct as apiDeleteProduct,
+} from '../api/productsApi';
 import type { Product } from '../../../mock/types/product';
 
 /**
@@ -24,12 +29,67 @@ const initialState: ProductsState = {
   favorites: [],
 };
 
-/**
- * Async thunk to fetch products (mock API)
- */
-export const getProducts = createAsyncThunk<Product[]>('products/getProducts', async () => {
-  return await fetchProducts();
-});
+// --- Async Thunks ---
+
+export const fetchProducts = createAsyncThunk<Product[]>(
+  'products/fetchProducts',
+  async (_, { rejectWithValue }) => {
+    try {
+      const products = await apiGetProducts();
+      return products;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('An unknown error occurred');
+    }
+  }
+);
+
+export const addProduct = createAsyncThunk<Product, Omit<Product, 'id'>>(
+  'products/addProduct',
+  async (product, { rejectWithValue }) => {
+    try {
+      const newProduct = await apiCreateProduct(product);
+      return newProduct;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('An unknown error occurred');
+    }
+  }
+);
+
+export const updateProduct = createAsyncThunk<Product, Product>(
+  'products/updateProduct',
+  async (product, { rejectWithValue }) => {
+    try {
+      const updatedProduct = await apiUpdateProduct(product);
+      return updatedProduct;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('An unknown error occurred');
+    }
+  }
+);
+
+export const removeProduct = createAsyncThunk<string, string>(
+  'products/removeProduct',
+  async (productId, { rejectWithValue }) => {
+    try {
+      await apiDeleteProduct(productId);
+      return productId;
+    } catch (error: unknown) {
+      if (error instanceof Error) {
+        return rejectWithValue(error.message);
+      }
+      return rejectWithValue('An unknown error occurred');
+    }
+  }
+);
 
 /**
  * Main products slice
@@ -49,47 +109,40 @@ const productsSlice = createSlice({
         state.favorites.push(id);
       }
     },
-    /**
-     * Add a new product
-     */
-    addProduct(state, action: PayloadAction<Product>) {
-      state.items.push(action.payload);
-    },
-    /**
-     * Update an existing product
-     */
-    updateProduct(state, action: PayloadAction<Product>) {
-      const updated = action.payload;
-      const idx = state.items.findIndex((item) => item.id === updated.id);
-      if (idx !== -1) {
-        state.items[idx] = updated;
-      }
-    },
-    /**
-     * Remove a product by id
-     */
-    removeProduct(state, action: PayloadAction<string>) {
-      state.items = state.items.filter((item) => item.id !== action.payload);
-      // Also remove from favorites
-      state.favorites = state.favorites.filter((id) => id !== action.payload);
-    },
   },
   extraReducers: (builder) => {
     builder
-      .addCase(getProducts.pending, (state) => {
+      // Fetch Products
+      .addCase(fetchProducts.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(getProducts.fulfilled, (state, action) => {
+      .addCase(fetchProducts.fulfilled, (state, action: PayloadAction<Product[]>) => {
         state.items = action.payload;
         state.loading = false;
       })
-      .addCase(getProducts.rejected, (state, action) => {
+      .addCase(fetchProducts.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message || 'An error occurred';
+        state.error = action.payload as string;
+      })
+      // Add Product
+      .addCase(addProduct.fulfilled, (state, action: PayloadAction<Product>) => {
+        state.items.push(action.payload);
+      })
+      // Update Product
+      .addCase(updateProduct.fulfilled, (state, action: PayloadAction<Product>) => {
+        const index = state.items.findIndex((p) => p.id === action.payload.id);
+        if (index !== -1) {
+          state.items[index] = action.payload;
+        }
+      })
+      // Remove Product
+      .addCase(removeProduct.fulfilled, (state, action: PayloadAction<string>) => {
+        state.items = state.items.filter((p) => p.id !== action.payload);
+        state.favorites = state.favorites.filter((id) => id !== action.payload);
       });
   },
 });
 
-export const { toggleFavorite, addProduct, updateProduct, removeProduct } = productsSlice.actions;
+export const { toggleFavorite } = productsSlice.actions;
 export default productsSlice.reducer;

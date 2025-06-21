@@ -34,10 +34,16 @@ const UserDetail: React.FC = () => {
   /**
    * Handle user delete
    */
-  const handleDelete = () => {
-    dispatch(removeUser(user.id));
-    message.success(t('delete') + ' ' + t('users') + '!');
-    navigate('/users');
+  const handleDelete = async () => {
+    if (!user) return;
+    try {
+      await dispatch(removeUser(user.id)).unwrap();
+      message.success(t('delete_success', { item: t('user') }));
+      navigate('/users');
+    } catch (error) {
+      console.error('Failed to delete user:', error);
+      message.error(t('delete_error', { item: t('user') }));
+    }
   };
 
   return (

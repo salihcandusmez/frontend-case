@@ -39,10 +39,16 @@ const ProductDetail: React.FC = () => {
   /**
    * Handle product delete
    */
-  const handleDelete = () => {
-    dispatch(removeProduct(product.id));
-    message.success(t('delete') + ' ' + t('products') + '!');
-    navigate('/products');
+  const handleDelete = async () => {
+    if (!product) return;
+    try {
+      await dispatch(removeProduct(product.id)).unwrap();
+      message.success(t('delete_success', { item: t('product') }));
+      navigate('/products');
+    } catch (error) {
+      console.error('Failed to delete product:', error);
+      message.error(t('delete_error', { item: t('product') }));
+    }
   };
 
   return (
@@ -90,7 +96,7 @@ const ProductDetail: React.FC = () => {
         <b>{t('price')}:</b> {product.price} TL
       </Paragraph>
       <Paragraph>
-        <b>{t('category')}:</b> {product.category}
+        <b>{t('category')}:</b> {t(`category_${product.category}`)}
       </Paragraph>
     </Card>
   );

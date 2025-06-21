@@ -32,9 +32,16 @@
   "yes": "Evet",
   "no": "Hayır",
   "back": "Geri",
-  "min": "En az {{count}} karakter",
-  "email_format": "Geçerli bir e-posta formatı girin",
+  "min": "En az {{count}} karakter olmalıdır",
+  "email_format": "Lütfen geçerli bir e-posta adresi girin",
   "positive": "0'dan büyük olmalı",
   "product_name": "Ürün Adı",
-  "user_name": "Ad Soyad"
+  "user_name": "Kullanıcı Adı",
+  "all_categories": "Tüm Kategoriler",
+  "category_apparel": "Giyim",
+  "category_electronics": "Elektronik",
+  "category_home_goods": "Ev Eşyaları",
+  "category_stationery": "Kırtasiye",
+  "category_sports": "Spor",
+  "category_groceries": "Market"
 }

@@ -41,19 +41,20 @@ const UsersForm: React.FC = () => {
     }
   }, [editing, user, form]);
 
-  const onFinish = (values: User) => {
-    if (editing && user) {
-      dispatch(updateUser({ ...user, ...values }));
-      message.success(t('update') + ' ' + t('users') + '!');
-    } else {
-      const newUser: User = {
-        ...values,
-        id: Date.now().toString(),
-      };
-      dispatch(addUser(newUser));
-      message.success(t('add_user') + ' ' + t('users') + '!');
+  const onFinish = async (values: Omit<User, 'id'>) => {
+    try {
+      if (editing && user) {
+        await dispatch(updateUser({ ...user, ...values })).unwrap();
+        message.success(t('update_success', { item: t('user') }));
+      } else {
+        await dispatch(addUser(values)).unwrap();
+        message.success(t('add_success', { item: t('user') }));
+      }
+      navigate('/users');
+    } catch (error) {
+      console.error('Failed to save user:', error);
+      message.error(t('save_error', { item: t('user') }));
     }
-    navigate('/users');
   };
 
   return (

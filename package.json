@@ -16,6 +16,7 @@
     "@reduxjs/toolkit": "^2.8.2",
     "antd": "^5.26.1",
     "axios": "^1.10.0",
+    "axios-mock-adapter": "^2.1.0",
     "i18next": "^25.2.1",
     "i18next-browser-languagedetector": "^8.2.0",
     "normalize.css": "^8.0.1",
@@ -29,6 +30,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.25.0",
+    "@types/axios-mock-adapter": "^1.9.0",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
     "@typescript-eslint/eslint-plugin": "^8.34.1",
